@@ -26,9 +26,21 @@ importers:
 
   apps/web:
     dependencies:
+      '@codex/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@libsql/client':
+        specifier: ^0.15.14
+        version: 0.15.14
+      '@next/env':
+        specifier: ^15.5.2
+        version: 15.5.2
       '@workspace/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      libsql:
+        specifier: ^0.5.22
+        version: 0.5.22
       lucide-react:
         specifier: ^0.475.0
         version: 0.475.0(react@19.1.1)
@@ -810,6 +822,9 @@ packages:
 
   '@next/env@15.4.5':
     resolution: {integrity: sha512-ruM+q2SCOVCepUiERoxOmZY9ZVoecR3gcXNwCYZRvQQWRjhOiPJGmQ2fAiLR6YKWXcSAh7G79KEFxN3rwhs4LQ==}
+
+  '@next/env@15.5.2':
+    resolution: {integrity: sha512-Qe06ew4zt12LeO6N7j8/nULSOe3fMXE4dM6xgpBQNvdzyK1sv5y4oAP3bq4LamrvGCZtmRYnW8URFCeX5nFgGg==}
 
   '@next/eslint-plugin-next@15.4.5':
     resolution: {integrity: sha512-YhbrlbEt0m4jJnXHMY/cCUDBAWgd5SaTa5mJjzOt82QwflAFfW/h3+COp2TfVSzhmscIZ5sg2WXt3MLziqCSCw==}
@@ -3944,6 +3959,8 @@ snapshots:
   '@neon-rs/load@0.0.4': {}
 
   '@next/env@15.4.5': {}
+
+  '@next/env@15.5.2': {}
 
   '@next/eslint-plugin-next@15.4.5':
     dependencies:
