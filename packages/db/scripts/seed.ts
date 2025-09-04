@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { config } from 'dotenv';
-import { eq } from 'drizzle-orm';
+import { eq, or } from 'drizzle-orm';
 
 /**
  * As this will be run outside of the server, we need to load the env file.
@@ -30,24 +30,28 @@ async function main() {
 
   await db.transaction(async (tx) => {
     /**
-     * Remove any existing project with the name "Alpha". Children
+     * Remove any existing project with the name "Alpha" or "Beta". Children
      * cascade will delete all associated folders and files.
      * 
      * NOTE: We can run the seed script multiple times without issue.
      */
-    await tx.delete(projects).where(eq(projects.name, "Alpha"));
+    await tx.delete(projects).where(or(eq(projects.name, "Project Alpha"), eq(projects.name, "Project Beta")));
 
     /**
      * Create a single project, project "Alpha".
      */
     const result = await tx
       .insert(projects)
-      .values({ name: "Alpha", description: "Demo seed project" })
+      .values([
+        { name: "Project Alpha", description: "Experimental workspace for managing documents in one place." },
+        { name: "Project Beta", description: "A more stable iteration of the trial workspace for teams." },
+      ])
       .returning({ id: projects.id });
+
 
     const projectId = result[0]?.id;
     if (!projectId) {
-      throw new Error("Failed to create 'Alpha' project");
+      throw new Error("Failed to create 'Project Alpha' project");
     }
 
     /**
@@ -114,7 +118,7 @@ async function main() {
     ]);
   });
 
-  console.log("✅ Seeded: Alpha + 5 folders + 10 files.");
+  console.log("✅ Seeded: Project Alpha & Project Beta + 5 folders + 10 files.");
 }
 
 main().catch((err) => {
