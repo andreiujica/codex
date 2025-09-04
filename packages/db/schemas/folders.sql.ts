@@ -11,15 +11,15 @@ import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 export const folders = sqliteTable(
   "folders",
   {
-    id: text().primaryKey().$defaultFn(() => createId()),
-    projectId: text().notNull().references(() => projects.id, { onDelete: "cascade" }),
+    id: text("id").primaryKey().$defaultFn(() => createId()),
+    projectId: text("project_id").notNull().references(() => projects.id, { onDelete: "cascade" }),
 
     /**
      * A null parentId means the folder is in the project root.
      */
-    parentId: text().references((): AnySQLiteColumn => folders.id, { onDelete: "cascade" }),
-    name: text().notNull(),
-    createdAt: text().default(sql`(CURRENT_TIMESTAMP)`),
+    parentId: text("parent_id").references((): AnySQLiteColumn => folders.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    createdAt: text("created_at").default(sql`(CURRENT_TIMESTAMP)`),
   },
   (t) => ([
     /**

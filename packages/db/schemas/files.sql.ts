@@ -17,22 +17,22 @@ export type FileKind = typeof fileKinds[number];
 export const files = sqliteTable(
   "files",
   {
-    id: text().primaryKey().$defaultFn(() => createId()),
-    projectId: text().notNull().references(() => projects.id, { onDelete: "cascade" }),
+    id: text("id").primaryKey().$defaultFn(() => createId()),
+    projectId: text("project_id").notNull().references(() => projects.id, { onDelete: "cascade" }),
 
     /**
      * A null folderId means the file is in the project root.
      */
-    folderId: text().references(() => folders.id, { onDelete: "cascade" }),
-    name: text().notNull(),
-    kind: text().notNull(),
-    sizeBytes: integer().notNull(),
-    uploadedAt: text().default(sql`(CURRENT_TIMESTAMP)`),
+    folderId: text("folder_id").references(() => folders.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    kind: text("kind").notNull(),
+    sizeBytes: integer("size_bytes").notNull(),
+    uploadedAt: text("uploaded_at").default(sql`(CURRENT_TIMESTAMP)`),
 
     /**
      * Soft-delete; NOTE: uniqueness below doesn't exclude deleted rows
      */
-    deletedAt: text(),
+    deletedAt: text("deleted_at"),
   },
   (t) => ([
     /**
