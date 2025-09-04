@@ -5,13 +5,23 @@ import { api } from "@/lib/ky";
 import { useEffect } from "react";
 import type { Project } from "@/types/api";
 import { ProjectCard } from "./project-card";
+import { useFileExplorerStore } from "@/stores/file-explorer";
 
 export function ProjectList() {
   const { activeProjectId, setActiveProjectId } = useProjectStore();
+  const { goToRoot } = useFileExplorerStore();
   const { data: projects, isLoading } = useQuery<Project[]>({
     queryKey: ["projects"],
     queryFn: () => api.get("projects").json(),
   });
+
+  const handleProjectClick = (id: string) => {
+    setActiveProjectId(id);
+    /**
+     * Whenever we change projects, we want to go to the root folder of the new project.
+     */
+    goToRoot();
+  }
 
   useEffect(() => {
     if (projects && projects.length > 0 && !activeProjectId) {
@@ -91,7 +101,7 @@ export function ProjectList() {
             {projects.map((project) => {
               const isActive = activeProjectId === project.id;
               
-              return <ProjectCard key={project.id} project={project} isActive={isActive} setActiveProjectId={setActiveProjectId} />;
+              return <ProjectCard key={project.id} project={project} isActive={isActive} onProjectClick={handleProjectClick} />;
             })}
           </SidebarGroupContent>
         </SidebarGroup>

@@ -4,3 +4,27 @@ export interface Project {
   description: string;
   createdAt: string;
 }
+
+export interface Folder {
+  id: string;
+  projectId: string;
+  parentId: string | null;
+  name: string;
+  createdAt: string;
+}
+
+export interface File {
+  id: string;
+  projectId: string;
+  folderId: string | null;
+  name: string;
+  kind: string;
+  sizeBytes: number;
+  uploadedAt: string;
+  deletedAt: string | null;
+}
+
+export interface FolderContents {
+  folders: Folder[];
+  files: File[];
+}

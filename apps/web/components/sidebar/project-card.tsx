@@ -7,18 +7,18 @@ import { Box } from "lucide-react";
 interface ProjectCardProps {
   project: Project;
   isActive: boolean;
-  setActiveProjectId: (id: string) => void;
+  onProjectClick: (id: string) => void;
 }
 
 /**
  * This component represents a project in the secondary sidebar.
  */
-export function ProjectCard({ project, isActive, setActiveProjectId }: ProjectCardProps) {
+export function ProjectCard({ project, isActive, onProjectClick }: ProjectCardProps) {
   const { accentClass, iconClass } = useProjectColors(project.id);
   return (
     <button
       key={project.id}
-      onClick={() => setActiveProjectId(project.id)}
+      onClick={() => onProjectClick(project.id)}
       className={`
         relative flex items-start gap-3 border-b p-4 text-left transition-colors w-full
         ${isActive 

@@ -5,7 +5,6 @@ const ACCENT_COLORS = [
   'bg-green-500/10 border-l-green-500 text-green-600',
   'bg-purple-500/10 border-l-purple-500 text-purple-600',
   'bg-orange-500/10 border-l-orange-500 text-orange-600',
-  'bg-pink-500/10 border-l-pink-500 text-pink-600',
   'bg-cyan-500/10 border-l-cyan-500 text-cyan-600',
 ];
 
@@ -14,8 +13,15 @@ const ICON_COLORS = [
   'bg-green-500 text-white',
   'bg-purple-500 text-white',
   'bg-orange-500 text-white',
-  'bg-pink-500 text-white',
   'bg-cyan-500 text-white',
+];
+
+const FOLDER_COLORS = [
+  'bg-blue-50 text-blue-600 group-hover:bg-blue-100 dark:bg-blue-950/30 dark:text-blue-400 dark:group-hover:bg-blue-900/40',
+  'bg-green-50 text-green-600 group-hover:bg-green-100 dark:bg-green-950/30 dark:text-green-400 dark:group-hover:bg-green-900/40',
+  'bg-purple-50 text-purple-600 group-hover:bg-purple-100 dark:bg-purple-950/30 dark:text-purple-400 dark:group-hover:bg-purple-900/40',
+  'bg-orange-50 text-orange-600 group-hover:bg-orange-100 dark:bg-orange-950/30 dark:text-orange-400 dark:group-hover:bg-orange-900/40',
+  'bg-cyan-50 text-cyan-600 group-hover:bg-cyan-100 dark:bg-cyan-950/30 dark:text-cyan-400 dark:group-hover:bg-cyan-900/40',
 ];
 
 /**
@@ -31,6 +37,7 @@ export function useProjectColors(projectId: string) {
     return {
       accentClass: ACCENT_COLORS[colorIndex],
       iconClass: ICON_COLORS[colorIndex],
+      folderClass: FOLDER_COLORS[colorIndex],
     };
   }, [projectId]);
 }
