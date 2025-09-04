@@ -1,25 +1,16 @@
-import { api } from "@/lib/ky"
-import { useFileExplorerStore } from "@/stores/file-explorer"
-import { useProjectStore } from "@/stores/projects"
-import { useQuery } from "@tanstack/react-query"
 import type { FolderContents } from "@/types/api"
 import { FolderCard } from "./folder-card"
 import { FileCard } from "./file-card"
 
-export function FileGrid() {
-  const { activeProjectId } = useProjectStore()
-  const { activeFolderId, setActiveFolderId, addToFolderHistory } = useFileExplorerStore()
-  
-  const { data: contents, isLoading } = useQuery<FolderContents>({
-    queryKey: ["contents", activeProjectId, activeFolderId],
-    queryFn: () => api.get(`projects/${activeProjectId}/contents${activeFolderId ? `?folderId=${activeFolderId}` : ""}`).json(),
-    enabled: !!activeProjectId,
-  })
+interface FileGridProps {
+  contents: FolderContents | undefined
+  isLoading: boolean
+  filteredContents: { files: any[], folders: any[] }
+  handleFolderClick: (folderId: string) => void
+  hasNoResults: boolean
+}
 
-  const handleFolderClick = (folderId: string) => {
-    addToFolderHistory(folderId)
-    setActiveFolderId(folderId)
-  }
+export function FileGrid({ contents, isLoading, filteredContents, handleFolderClick, hasNoResults }: FileGridProps) {
 
   if (isLoading) {
     return (
@@ -43,6 +34,17 @@ export function FileGrid() {
     )
   }
 
+  if (hasNoResults) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center space-y-2">
+          <div className="text-muted-foreground text-sm">No results found</div>
+          <div className="text-muted-foreground text-xs">Try a different search term</div>
+        </div>
+      </div>
+    )
+  }
+
   if (!contents || (contents.folders.length === 0 && contents.files.length === 0)) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -57,8 +59,8 @@ export function FileGrid() {
   return (
     <div className="p-2">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
-        {/* Render folders first */}
-        {contents.folders.map((folder) => (
+        {/* Render filtered folders first */}
+        {filteredContents.folders.map((folder) => (
           <FolderCard 
             key={folder.id} 
             folder={folder} 
@@ -66,8 +68,8 @@ export function FileGrid() {
           />
         ))}
 
-        {/* Render files */}
-        {contents.files.map((file) => (
+        {/* Render filtered files */}
+        {filteredContents.files.map((file) => (
           <FileCard key={file.id} file={file} />
         ))}
       </div>

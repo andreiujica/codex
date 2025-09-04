@@ -1,25 +1,16 @@
-import { api } from "@/lib/ky"
-import { useFileExplorerStore } from "@/stores/file-explorer"
-import { useProjectStore } from "@/stores/projects"
-import { useQuery } from "@tanstack/react-query"
 import type { FolderContents } from "@/types/api"
 import { FileRow } from "./file-row"
 import { FolderRow } from "./folder-row"
 
-export function FileList() {
-  const { activeProjectId } = useProjectStore()
-  const { activeFolderId, setActiveFolderId, addToFolderHistory } = useFileExplorerStore()
-  
-  const { data: contents, isLoading } = useQuery<FolderContents>({
-    queryKey: ["contents", activeProjectId, activeFolderId],
-    queryFn: () => api.get(`projects/${activeProjectId}/contents${activeFolderId ? `?folderId=${activeFolderId}` : ""}`).json(),
-    enabled: !!activeProjectId,
-  })
+interface FileListProps {
+  contents: FolderContents | undefined
+  isLoading: boolean
+  filteredContents: { files: any[], folders: any[] }
+  handleFolderClick: (folderId: string) => void
+  hasNoResults: boolean
+}
 
-  const handleFolderClick = (folderId: string) => {
-    addToFolderHistory(folderId)
-    setActiveFolderId(folderId)
-  }
+export function FileList({ contents, isLoading, filteredContents, handleFolderClick, hasNoResults }: FileListProps) {
 
   if (isLoading) {
     return (
@@ -40,6 +31,17 @@ export function FileList() {
     )
   }
 
+  if (hasNoResults) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center space-y-2">
+          <div className="text-muted-foreground text-sm">No results found</div>
+          <div className="text-muted-foreground text-xs">Try a different search term</div>
+        </div>
+      </div>
+    )
+  }
+
   if (!contents || (contents.folders.length === 0 && contents.files.length === 0)) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -54,8 +56,8 @@ export function FileList() {
   return (
     <div className="p-2">
       <div className="space-y-1">
-        {/* Render folders first */}
-        {contents.folders.map((folder) => (
+        {/* Render filtered folders first */}
+        {filteredContents.folders.map((folder) => (
           <FolderRow 
             key={folder.id} 
             folder={folder} 
@@ -63,8 +65,8 @@ export function FileList() {
           />
         ))}
 
-        {/* Render files */}
-        {contents.files.map((file) => (
+        {/* Render filtered files */}
+        {filteredContents.files.map((file) => (
           <FileRow key={file.id} file={file} />
         ))}
       </div>
