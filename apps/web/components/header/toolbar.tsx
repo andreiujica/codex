@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Grid3X3, List, X, Grid2x2 } from "lucide-react"
+import { Search, Grid3X3, List, X, Grid2x2, Folder, Globe } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { ToggleGroup, ToggleGroupItem } from "@workspace/ui/components/toggle-group"
@@ -14,7 +14,7 @@ interface ToolbarProps {
 }
 
 export function Toolbar({ className }: ToolbarProps) {
-  const { viewMode, setViewMode, searchQuery, setSearchQuery } = useToolbarStore()
+  const { viewMode, setViewMode, searchQuery, setSearchQuery, searchMode, setSearchMode } = useToolbarStore()
   const [isSearchActive, setIsSearchActive] = useState(false)
 
   const handleSearchToggle = () => {
@@ -64,14 +64,33 @@ export function Toolbar({ className }: ToolbarProps) {
       <div className="flex items-center">
         {isSearchActive ? (
           <div className="flex items-center gap-2">
-            <Input
-              placeholder="Search files..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              onKeyDown={handleSearchKeyDown}
-              className="w-64"
-              autoFocus
-            />
+            <div className="relative">
+              <Input
+                placeholder={searchMode === "current-folder" ? "Search in current folder..." : "Search all folders..."}
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchKeyDown}
+                className="w-64 pr-20"
+                autoFocus
+              />
+              <ToggleGroup
+                type="single"
+                value={searchMode}
+                onValueChange={(value) => {
+                  if (value) setSearchMode(value as "current-folder" | "all-folders")
+                }}
+                variant="default"
+                size="sm"
+                className="absolute right-0 top-1/2 -translate-y-1/2"
+              >
+                <ToggleGroupItem value="current-folder" aria-label="Search current folder">
+                  <Folder className="h-3 w-3" />
+                </ToggleGroupItem>
+                <ToggleGroupItem value="all-folders" aria-label="Search all folders">
+                  <Globe className="h-3 w-3" />
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
             <Button
               variant="ghost"
               size="icon"

@@ -6,6 +6,8 @@ export interface ToolbarStore {
   setViewMode: (mode: "list" | "grid") => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  searchMode: "current-folder" | "all-folders";
+  setSearchMode: (mode: "current-folder" | "all-folders") => void;
 }
 
 export const useToolbarStore = create<ToolbarStore>()(
@@ -15,6 +17,8 @@ export const useToolbarStore = create<ToolbarStore>()(
       setViewMode: (mode) => set({ viewMode: mode }),
       searchQuery: "",
       setSearchQuery: (query) => set({ searchQuery: query }),
+      searchMode: "current-folder",
+      setSearchMode: (mode) => set({ searchMode: mode }),
     }), {
     name: "toolbar",
     partialize: (state) => ({
