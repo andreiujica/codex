@@ -19,15 +19,11 @@ export async function GET(req: NextRequest, ctx: Ctx<{ projectId: string }>) {
   const { projectId } = await ctx.params;
   try {
     const url = new URL(req.url);
-    const folderIdParam = url.searchParams.get("folderId");
     const includeDeleted = url.searchParams.get("includeDeleted") === "true";
 
 
     const conditions: SQL<unknown>[] = [
       eq(files.projectId, projectId),
-      folderIdParam === null
-        ? isNull(files.folderId)
-        : eq(files.folderId, folderIdParam),
     ];
     
     if (!includeDeleted) {
