@@ -4,13 +4,15 @@ import type { Folder } from "@/types/api"
 import { Folder as FolderIcon } from "lucide-react"
 import { cn } from "@workspace/ui/lib/utils"
 import { formatDate } from "@/utils/formatters"
+import { DeleteButton } from "./delete-button"
 
 interface FolderCardProps {
   folder: Folder
   onFolderClick: (folderId: string) => void
+  onDelete?: (folderId: string) => void
 }
 
-export function FolderCard({ folder, onFolderClick }: FolderCardProps) {
+export function FolderCard({ folder, onFolderClick, onDelete }: FolderCardProps) {
   const { activeProjectId } = useProjectStore()
   const { folderClass } = useProjectColors(activeProjectId || '')
 
@@ -38,7 +40,7 @@ export function FolderCard({ folder, onFolderClick }: FolderCardProps) {
           </div>
           
           {/* Folder Info */}
-          <div className="p-3 space-y-1 min-h-[2.5rem]">
+          <div className="p-3 space-y-1 min-h-[2.5rem] relative">
             <div 
               className="text-sm font-medium text-foreground truncate leading-tight"
               title={folder.name}
@@ -48,6 +50,16 @@ export function FolderCard({ folder, onFolderClick }: FolderCardProps) {
             <div className="text-xs text-muted-foreground">
               {formatDate(folder.createdAt)}
             </div>
+            
+            {/* Delete Button - appears on hover */}
+            {onDelete && (
+              <DeleteButton
+                onDelete={onDelete}
+                id={folder.id}
+                title="Delete folder"
+                className="absolute bottom-3 right-3"
+              />
+            )}
           </div>
         </div>
       </div>

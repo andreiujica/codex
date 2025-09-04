@@ -4,13 +4,15 @@ import { useProjectStore } from "@/stores/projects"
 import { Folder as FolderIcon } from "lucide-react"
 import { cn } from "@workspace/ui/lib/utils"
 import { formatDate } from "@/utils/formatters"
+import { DeleteButton } from "./delete-button"
 
 interface FolderRowProps {
   folder: Folder
   onFolderClick: (folderId: string) => void
+  onDelete?: (folderId: string) => void
 }
 
-export function FolderRow({ folder, onFolderClick }: FolderRowProps) {
+export function FolderRow({ folder, onFolderClick, onDelete }: FolderRowProps) {
   const { activeProjectId } = useProjectStore()
   const { folderClass } = useProjectColors(activeProjectId || '')
 
@@ -50,6 +52,15 @@ export function FolderRow({ folder, onFolderClick }: FolderRowProps) {
         <div className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
           Folder
         </div>
+        
+        {/* Delete Button - appears on hover */}
+        {onDelete && (
+          <DeleteButton
+            onDelete={onDelete}
+            id={folder.id}
+            title="Delete folder"
+          />
+        )}
       </div>
     </button>
   )

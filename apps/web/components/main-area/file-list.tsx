@@ -8,9 +8,11 @@ interface FileListProps {
   filteredContents: { files: any[], folders: any[] }
   handleFolderClick: (folderId: string) => void
   hasNoResults: boolean
+  handleDeleteFile: (fileId: string, fileName: string) => void
+  handleDeleteFolder: (folderId: string, folderName: string) => void
 }
 
-export function FileList({ contents, isLoading, filteredContents, handleFolderClick, hasNoResults }: FileListProps) {
+export function FileList({ contents, isLoading, filteredContents, handleFolderClick, hasNoResults, handleDeleteFile, handleDeleteFolder }: FileListProps) {
 
   if (isLoading) {
     return (
@@ -62,12 +64,17 @@ export function FileList({ contents, isLoading, filteredContents, handleFolderCl
             key={folder.id} 
             folder={folder} 
             onFolderClick={handleFolderClick} 
+            onDelete={(folderId) => handleDeleteFolder(folderId, folder.name)}
           />
         ))}
 
         {/* Render filtered files */}
         {filteredContents.files.map((file) => (
-          <FileRow key={file.id} file={file} />
+          <FileRow 
+            key={file.id} 
+            file={file} 
+            onDelete={(fileId) => handleDeleteFile(fileId, file.name)} 
+          />
         ))}
       </div>
     </div>

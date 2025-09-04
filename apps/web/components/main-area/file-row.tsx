@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import { cn } from "@workspace/ui/lib/utils"
 import { formatFileSize, formatDate } from "@/utils/formatters"
+import { DeleteButton } from "./delete-button"
 
 function getFileIconComponent(fileKind: string) {
   const kind = fileKind.toLowerCase()
@@ -21,9 +22,10 @@ function getFileIconComponent(fileKind: string) {
 
 interface FileRowProps {
   file: File
+  onDelete?: (fileId: string) => void
 }
 
-export function FileRow({ file }: FileRowProps) {
+export function FileRow({ file, onDelete }: FileRowProps) {
   const FileIconComponent = getFileIconComponent(file.kind)
   
   return (
@@ -63,6 +65,15 @@ export function FileRow({ file }: FileRowProps) {
         <div className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
           {file.kind}
         </div>
+        
+        {/* Delete Button - appears on hover */}
+        {onDelete && (
+          <DeleteButton
+            onDelete={onDelete}
+            id={file.id}
+            title="Delete file"
+          />
+        )}
       </div>
     </div>
   )

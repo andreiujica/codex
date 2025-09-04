@@ -8,9 +8,11 @@ import {
 } from "lucide-react"
 import { cn } from "@workspace/ui/lib/utils"
 import { formatFileSize, formatDate } from "@/utils/formatters"
+import { DeleteButton } from "./delete-button"
 
 interface FileCardProps {
   file: File
+  onDelete?: (fileId: string) => void
 }
 
 function getFileIconComponent(fileKind: string) {
@@ -23,7 +25,7 @@ function getFileIconComponent(fileKind: string) {
   return FileIcon
 }
 
-export function FileCard({ file }: FileCardProps) {
+export function FileCard({ file, onDelete }: FileCardProps) {
   const FileIconComponent = getFileIconComponent(file.kind)
   
   return (
@@ -51,7 +53,7 @@ export function FileCard({ file }: FileCardProps) {
           </div>
           
           {/* File Info */}
-          <div className="p-3 space-y-1 min-h-[2.5rem]">
+          <div className="p-3 space-y-1 min-h-[2.5rem] relative">
             <div 
               className="text-sm font-medium text-foreground truncate leading-tight"
               title={file.name}
@@ -63,6 +65,16 @@ export function FileCard({ file }: FileCardProps) {
               <span className="text-muted-foreground/60">•</span>
               <span>{formatDate(file.uploadedAt)}</span>
             </div>
+            
+            {/* Delete Button - appears on hover */}
+            {onDelete && (
+              <DeleteButton
+                onDelete={onDelete}
+                id={file.id}
+                title="Delete file"
+                className="absolute bottom-3 right-3"
+              />
+            )}
           </div>
         </div>
       </div>
