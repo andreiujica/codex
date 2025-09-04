@@ -9,11 +9,11 @@ const ACCENT_COLORS = [
 ];
 
 const ICON_COLORS = [
-  'bg-blue-500 text-white',
-  'bg-green-500 text-white',
-  'bg-purple-500 text-white',
-  'bg-orange-500 text-white',
-  'bg-cyan-500 text-white',
+  'bg-blue-400 text-white hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500',
+  'bg-green-400 text-white hover:bg-green-500 dark:bg-green-600 dark:hover:bg-green-500',
+  'bg-purple-400 text-white hover:bg-purple-500 dark:bg-purple-600 dark:hover:bg-purple-500',
+  'bg-orange-400 text-white hover:bg-orange-500 dark:bg-orange-600 dark:hover:bg-orange-500',
+  'bg-cyan-400 text-white hover:bg-cyan-500 dark:bg-cyan-600 dark:hover:bg-cyan-500',
 ];
 
 const FOLDER_COLORS = [
