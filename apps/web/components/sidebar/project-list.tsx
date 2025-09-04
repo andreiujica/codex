@@ -29,7 +29,7 @@ export function ProjectList() {
   if (isLoading) {
     return (
       <Sidebar collapsible="none" className="hidden flex-1 md:flex">
-        <SidebarHeader className="border-b p-4 h-[3.831rem]">
+        <SidebarHeader className="border-b p-4 h-[3.75rem]">
           <div className="flex w-full items-center justify-between">
             <div className="text-foreground text-base font-semibold tracking-tight">
               Workspaces
@@ -54,7 +54,7 @@ export function ProjectList() {
   if (!projects || projects.length === 0) {
     return (
       <Sidebar collapsible="none" className="hidden flex-1 md:flex">
-        <SidebarHeader className="border-b p-4 h-[3.831rem]">
+        <SidebarHeader className="border-b p-4 h-[3.75rem]">
           <div className="flex w-full items-center justify-between">
             <div className="text-foreground text-base font-semibold tracking-tight">
               Workspaces
@@ -75,7 +75,7 @@ export function ProjectList() {
 
   return (
     <Sidebar collapsible="none" className="hidden flex-1 md:flex">
-      <SidebarHeader className="border-b p-4 h-[3.831rem]">
+      <SidebarHeader className="border-b p-4 h-[3.75rem]">
         <div className="flex w-full items-center justify-between">
           <div className="text-foreground text-base font-medium tracking-tight">
             Workspaces
