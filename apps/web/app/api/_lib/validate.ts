@@ -3,9 +3,9 @@ import { HttpError } from "./http";
 
 /**
  * Validates the request body against the given schema.
- * @param req - The request object.
+ * @param req - The user-submitted request object.
  * @param schema - Zod schema to validate the request body against.
- * @returns The validated request body on success.
+ * @returns The validated request body on success or a HttpError on failure.
  */
 export async function validateRequestBody<T>(req: Request, schema: ZodSchema<T>): Promise<T> {
   try {
@@ -23,7 +23,7 @@ export async function validateRequestBody<T>(req: Request, schema: ZodSchema<T>)
  * Returns a JSON response with the given data and status code.
  * @param data - The data to be returned in the response.
  * @param init - The response init object.
- * @returns The response object.
+ * @returns The response object. This is a wrapper around the Response object.
  */
 export function json<T>(data: T, init?: ResponseInit) {
   return new Response(JSON.stringify(data), { status: 200, headers: { "Content-Type": "application/json" }, ...init });

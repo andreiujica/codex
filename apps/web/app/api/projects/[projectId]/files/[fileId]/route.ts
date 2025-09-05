@@ -14,7 +14,7 @@ function scopeFile(projectId: string, fileId: string) {
 }
 
 /**
- * GET request to get a file.
+ * GET request to get a file by its ID.
  * @param _req - The request object.
  * @param ctx - The context object.
  * @returns The file.

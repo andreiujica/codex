@@ -18,13 +18,17 @@ export async function GET(req: NextRequest, ctx: Ctx<{ projectId: string }>) {
     const url = new URL(req.url);
     const folderIdParam = url.searchParams.get("folderId");
 
-
+    /**
+     * Condition that gives us the right folder (or the root folder if no folderId is provided)
+     */
     const folderWhere = and(
       eq(folders.projectId, projectId),
       folderIdParam === null ? isNull(folders.parentId) : eq(folders.parentId, folderIdParam)
     );
 
-
+    /**
+     * Condition that gives us the right files (or the root files if no folderId is provided)
+     */
     const fileWhere = and(
       eq(files.projectId, projectId),
       folderIdParam === null ? isNull(files.folderId) : eq(files.folderId, folderIdParam),
