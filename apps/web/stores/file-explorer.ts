@@ -29,10 +29,14 @@ export const useFileExplorerStore = create<FileExplorerStore>()(
       popUntilFolderId: (id) => set((state) => {
         const index = state.folderHistory.indexOf(id);
         if (index === -1) {
-          // If the folder ID is not found, return the current state unchanged
+          /**
+           * If the folder ID is not found, return the current state unchanged
+           */
           return { folderHistory: state.folderHistory };
         }
-        // Keep everything up to and including the target folder ID
+        /**
+         * Keep everything up to and including the target folder ID
+         */
         const newHistory = state.folderHistory.slice(0, index + 1);
         return { 
           folderHistory: newHistory,
@@ -50,7 +54,7 @@ export const useFileExplorerStore = create<FileExplorerStore>()(
        */
       goBack: () => set((state) => {
         if (state.folderHistory.length === 0) {
-          return state; // Already at root, can't go back further
+          return state; 
         }
         
         const newHistory = state.folderHistory.slice(0, -1);

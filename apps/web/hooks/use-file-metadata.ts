@@ -1,20 +1,18 @@
 import { useCallback } from 'react'
 import type { FileMetadata } from '@/types/api'
 
-// Supported file types with their MIME types and extensions
-const ALLOWED_FILE_TYPES = {
-  // PDF
-  'application/pdf': ['.pdf'],
-  // Word documents
-  'application/msword': ['.doc'],
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
-  // Excel spreadsheets
-  'application/vnd.ms-excel': ['.xls'],
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
-  // PowerPoint presentations
-  'application/vnd.ms-powerpoint': ['.ppt'],
-  'application/vnd.openxmlformats-officedocument.presentationml.presentation': ['.pptx'],
-} as const
+/**
+ * Allowed file extensions for upload. For now, we only support PDF, Word, Excel, and PowerPoint.
+ */
+const ALLOWED_FILE_TYPES = [
+  '.pdf',
+  '.doc',
+  '.docx',
+  '.xls',
+  '.xlsx',
+  '.ppt',
+  '.pptx',
+] as const
 
 
 export interface UseFileMetadataReturn {
@@ -25,15 +23,18 @@ export interface UseFileMetadataReturn {
 }
 
 export function useFileMetadata(): UseFileMetadataReturn {
-  // Maximum file size: 50MB
+  /**
+   * Maximum file size: 50MB
+   */
   const maxFileSizeMB = 50
   const maxFileSizeBytes = maxFileSizeMB * 1024 * 1024
 
-  // Get all allowed extensions
-  const allowedExtensions = Object.values(ALLOWED_FILE_TYPES).flat()
+  const allowedExtensions = [...ALLOWED_FILE_TYPES]
 
   const validateFile = useCallback((file: File): { isValid: boolean; error?: string } => {
-    // Check file size
+    /**
+     * Check file size and return an error if it exceeds the limit.
+     */
     if (file.size > maxFileSizeBytes) {
       return {
         isValid: false,
@@ -41,10 +42,11 @@ export function useFileMetadata(): UseFileMetadataReturn {
       }
     }
 
-    // Get file extension
+    /**
+     * Get file extension and check if it is allowed.
+     */
     const extension = '.' + file.name.split('.').pop()?.toLowerCase()
-    
-    // Check if extension is allowed
+
     if (!allowedExtensions.includes(extension as any)) {
       return {
         isValid: false,
@@ -56,13 +58,17 @@ export function useFileMetadata(): UseFileMetadataReturn {
   }, [allowedExtensions, maxFileSizeBytes, maxFileSizeMB])
 
   const parseFileMetadata = useCallback(async (file: File): Promise<FileMetadata> => {
-    // Validate file first
+    /**
+     * First check whether the file is valid or not.
+     */
     const validation = validateFile(file)
     if (!validation.isValid) {
       throw new Error(validation.error)
     }
 
-    // Extract file extension
+    /**
+     * Extract file extension.
+     */
     const kind = file.name.split('.').pop()?.toLowerCase()!
     
 

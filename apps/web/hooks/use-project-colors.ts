@@ -31,7 +31,9 @@ const FOLDER_COLORS = [
  */
 export function useProjectColors(projectId: string) {
   return useMemo(() => {
-    // Use project ID to consistently assign the same color
+    /**
+     * Use project ID to consistently assign the same color
+     */
     const colorIndex = projectId.charCodeAt(0) % ACCENT_COLORS.length;
     
     return {
