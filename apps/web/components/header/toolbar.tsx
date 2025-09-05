@@ -8,6 +8,7 @@ import { ToggleGroup, ToggleGroupItem } from "@workspace/ui/components/toggle-gr
 import { useToolbarStore } from "../../stores/toolbar"
 import { ThemeToggle } from "./theme-toggle"
 import { CreateFolder } from "./create-folder"
+import { UploadFile } from "./upload-file"
 import { cn } from "@workspace/ui/lib/utils"
 
 interface ToolbarProps {
@@ -40,8 +41,10 @@ export function Toolbar({ className }: ToolbarProps) {
 
   return (
     <div className={cn("flex items-center gap-8 justify-end px-4 bg-background", className)}>
-      <CreateFolder />
-      <ThemeToggle />
+      <div className="flex items-center gap-2">
+        <UploadFile />
+        <CreateFolder />
+      </div>
       
       <div className="flex items-center gap-2">
         <ToggleGroup
@@ -113,6 +116,7 @@ export function Toolbar({ className }: ToolbarProps) {
           </Button>
         )}
       </div>
+      <ThemeToggle />
     </div>
   )
 }

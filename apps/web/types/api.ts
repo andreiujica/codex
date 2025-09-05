@@ -24,6 +24,8 @@ export interface File {
   deletedAt: string | null;
 }
 
+export type FileMetadata = Omit<File, 'id' | 'projectId' | 'folderId' | 'uploadedAt' | 'deletedAt'>
+
 export interface FolderContents {
   folders: Folder[];
   files: File[];
