@@ -1,3 +1,5 @@
+<img width="1246" height="555" alt="Screenshot 2025-09-05 at 12 10 42" src="https://github.com/user-attachments/assets/656f76a4-00f3-48bf-ae9c-943cbf886e2e" />
+
 # Codex
 
 A modern file management system built with Next.js, providing an intuitive web interface for organizing projects, folders, and files. Featuring a complete file explorer with grid and list views, upload functionality, and hierarchical folder organization.
