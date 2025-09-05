@@ -28,10 +28,17 @@ export function Toolbar({ className }: ToolbarProps) {
     }
   }
 
+  /**
+   * The handleSearchChange handler is used to update the search query.
+   */
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
   }
 
+  /**
+   * The handleSearchKeyDown handler is used to handle the escape key
+   * and close the search bar.
+   */
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Escape") {
       setSearchQuery("")
@@ -41,11 +48,17 @@ export function Toolbar({ className }: ToolbarProps) {
 
   return (
     <div className={cn("flex items-center gap-8 justify-end px-4 bg-background", className)}>
+      {/**
+       * The upload file and create folder buttons.
+       */}
       <div className="flex items-center gap-2">
         <UploadFile />
         <CreateFolder />
       </div>
       
+      {/**
+       * The view mode toggle group.
+       */}
       <div className="flex items-center gap-2">
         <ToggleGroup
           type="single"
@@ -65,7 +78,9 @@ export function Toolbar({ className }: ToolbarProps) {
         </ToggleGroup>
       </div>
 
-
+      {/**
+       * The search bar and toggle group.
+       */}
       <div className="flex items-center">
         {isSearchActive ? (
           <div className="flex items-center gap-2">
@@ -116,6 +131,10 @@ export function Toolbar({ className }: ToolbarProps) {
           </Button>
         )}
       </div>
+
+      {/**
+       * The theme toggle button.
+       */}
       <ThemeToggle />
     </div>
   )

@@ -38,10 +38,17 @@ export function UploadFile() {
   const { parseFileMetadata, validateFile, allowedExtensions, maxFileSizeMB } = useFileMetadata()
   const queryClient = useQueryClient()
 
-  // Disable file upload during global search
+  /**
+   * During global search, we disable file upload (as well as folder creation)
+   */
   const isGlobalSearchActive = searchMode === "all-folders" && searchQuery.trim().length > 0
   const isDisabled = isGlobalSearchActive || isUploading
 
+  /**
+   * The handleFileSelect handler is used to handle a file being selected.
+   * 
+   * We also validate the file and set the error if it is invalid.
+   */
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     setError(null)
@@ -62,6 +69,13 @@ export function UploadFile() {
     setSelectedFile(file)
   }
 
+  /**
+   * The handleUpload handler is used to upload the file *METADATA* to the API and 
+   * invalidate the queries to refresh the folder contents.
+   * 
+   * We don't upload the file itself for now as we didn't want to deal with the 
+   * complexity of bucket uploads, pre-signed URLs, etc.
+   */
   const handleUpload = async () => {
     if (!selectedFile || !activeProjectId) return
 
@@ -69,10 +83,14 @@ export function UploadFile() {
     setError(null)
 
     try {
-      // Parse file metadata
+      /**
+       * Parse file metadata
+       */
       const metadata = await parseFileMetadata(selectedFile)
 
-      // Send metadata to API
+      /**
+       * Send metadata to API
+       */
       const response = await api.post(`projects/${activeProjectId}/files`, {
         json: {
           name: metadata.name,
@@ -83,14 +101,18 @@ export function UploadFile() {
       })
 
       if (response.ok) {
-        // Close dialog and reset state
+        /**
+         * Close dialog and reset state
+         */
         setIsOpen(false)
         setSelectedFile(null)
         if (fileInputRef.current) {
           fileInputRef.current.value = ''
         }
         
-        // Invalidate queries to refresh the folder contents
+        /**
+         * Invalidate queries to refresh the folder contents
+         */
         queryClient.invalidateQueries({ queryKey: ["contents", activeProjectId, activeFolderId] })
       }
     } catch (error) {
@@ -101,6 +123,9 @@ export function UploadFile() {
     }
   }
 
+  /**
+   * The handleOpenChange handler is used to close the dialog when the user clicks outside of it.
+   */
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open)
     if (!open) {
@@ -114,6 +139,9 @@ export function UploadFile() {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      {/**
+       * The dialog trigger is the button that opens the dialog.
+       */}
       <DialogTrigger asChild>
         <Button
           variant="ghost"
@@ -129,6 +157,9 @@ export function UploadFile() {
           <Upload className="size-4 text-white" />
         </Button>
       </DialogTrigger>
+      {/**
+       * The dialog content is the message box to upload a file.
+       */}
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Upload File</DialogTitle>
@@ -138,6 +169,9 @@ export function UploadFile() {
           </DialogDescription>
         </DialogHeader>
         
+        {/**
+         * The file input and label.
+         */}
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="file-input" className="text-sm font-medium">
@@ -178,6 +212,9 @@ export function UploadFile() {
           )}
         </div>
 
+        {/**
+         * The cancel and upload buttons.
+         */}
         <DialogFooter>
           <Button
             type="button"

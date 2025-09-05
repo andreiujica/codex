@@ -10,6 +10,9 @@ import { cn } from "@workspace/ui/lib/utils"
 import { formatFileSize, formatDate } from "@/utils/formatters"
 import { DeleteButton } from "./delete-button"
 
+/**
+ * TODO: Dedupe this as we also have the same function in file-card.tsx
+ */
 function getFileIconComponent(fileKind: string) {
   const kind = fileKind.toLowerCase()
   if (kind === 'pdf') return FileText

@@ -6,13 +6,13 @@ import { useFileExplorerStore } from "@/stores/file-explorer"
 import { useProjectStore } from "@/stores/projects"
 import { useQuery } from "@tanstack/react-query"
 import type { Folder } from "@/types/api"
-import { 
-  Breadcrumb, 
-  BreadcrumbList, 
-  BreadcrumbItem, 
-  BreadcrumbLink, 
-  BreadcrumbSeparator, 
-  BreadcrumbPage 
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage
 } from "@workspace/ui/components/breadcrumb"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { Button } from "@workspace/ui/components/button"
@@ -30,20 +30,28 @@ export function FileBreadcrumb() {
     queryKey: ["breadcrumb-folders", activeProjectId, folderHistory],
     queryFn: async () => {
       if (!activeProjectId || folderHistory.length === 0) return []
-      
+
       const folderPromises = folderHistory.map(folderId =>
         api.get(`projects/${activeProjectId}/folders/${folderId}`).json<Folder>()
       )
-      
+
       return Promise.all(folderPromises)
     },
     enabled: !!activeProjectId && folderHistory.length > 0,
   })
 
+  /**
+   * The handleFolderClick handler is used to navigate to a folder.
+   * 
+   * It also updates the folder history.
+   */
   const handleFolderClick = (folderId: string) => {
     popUntilFolderId(folderId)
   }
 
+  /**
+   * If the folder queries are loading, we show a skeleton.
+   */
   if (folderQueries.isLoading) {
     return (
       <div className="flex items-center gap-2">
@@ -59,10 +67,6 @@ export function FileBreadcrumb() {
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          {/* NOTE: We don't support going forward yet, as that would require
-            * storing the navigation history. Part of the next release. Therefore,
-            * we just disable the forwardbutton.
-            */}
           <Button
             variant="ghost"
             size="icon"
@@ -127,50 +131,50 @@ export function FileBreadcrumb() {
       </div>
 
       <Separator
-          orientation="vertical"
-          className="mr-2 data-[orientation=vertical]:h-4"
-        />
+        orientation="vertical"
+        className="mr-2 data-[orientation=vertical]:h-4"
+      />
 
       <Breadcrumb>
         <BreadcrumbList>
-        {/* Home/Root level */}
-        <BreadcrumbItem>
-          <BreadcrumbLink 
-            href="#" 
-            onClick={(e) => { 
-              e.preventDefault()
-              goToRoot()
-            }}
-          >
-            Home
-          </BreadcrumbLink>
-        </BreadcrumbItem>
+          {/* Home/Root level */}
+          <BreadcrumbItem>
+            <BreadcrumbLink
+              href="#"
+              onClick={(e) => {
+                e.preventDefault()
+                goToRoot()
+              }}
+            >
+              Home
+            </BreadcrumbLink>
+          </BreadcrumbItem>
 
-        {/* Folder breadcrumbs */}
-        {folders.map((folder, index) => {
-          const isLast = index === folders.length - 1
-          
-          return (
-            <Fragment key={folder.id}>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                {isLast ? (
-                  <BreadcrumbPage>{folder.name}</BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      handleFolderClick(folder.id)
-                    }}
-                  >
-                    {folder.name}
-                  </BreadcrumbLink>
-                )}
-              </BreadcrumbItem>
-            </Fragment>
-          )
-        })}
+          {/* Folder breadcrumbs */}
+          {folders.map((folder, index) => {
+            const isLast = index === folders.length - 1
+
+            return (
+              <Fragment key={folder.id}>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  {isLast ? (
+                    <BreadcrumbPage>{folder.name}</BreadcrumbPage>
+                  ) : (
+                    <BreadcrumbLink
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleFolderClick(folder.id)
+                      }}
+                    >
+                      {folder.name}
+                    </BreadcrumbLink>
+                  )}
+                </BreadcrumbItem>
+              </Fragment>
+            )
+          })}
         </BreadcrumbList>
       </Breadcrumb>
     </div>

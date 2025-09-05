@@ -18,10 +18,8 @@ import { useFileExplorerStore } from "@/stores/file-explorer"
 import { useToolbarStore } from "@/stores/toolbar"
 import { api } from "@/lib/ky"
 import { cn } from "@workspace/ui/lib/utils"
+import type { CreateFolderForm } from "@/types/forms"
 
-interface CreateFolderForm {
-  name: string
-}
 
 // Form validation schema
 const folderValidation = {
@@ -49,7 +47,9 @@ export function CreateFolder() {
   const { iconClass } = useProjectColors(activeProjectId || '')
   const queryClient = useQueryClient()
 
-  // Disable folder creation during global search
+  /**
+   * During global search, we disable folder creation.
+   */
   const isGlobalSearchActive = searchMode === "all-folders" && searchQuery.trim().length > 0
   const isDisabled = isGlobalSearchActive || isCreating
 
@@ -68,6 +68,11 @@ export function CreateFolder() {
 
   const folderName = watch("name")
 
+  /**
+   * The onSubmit handler for the form handles the actual API call to create a folder.
+   * 
+   * It also closes the dropdown, resets the form and invalidates the queries to refresh the folder contents.
+   */
   const onSubmit = async (data: CreateFolderForm) => {
     if (!activeProjectId) return
 
@@ -81,11 +86,15 @@ export function CreateFolder() {
       })
 
       if (response.ok) {
-        // Close dropdown and reset form
+        /**
+         * Close dropdown and reset form
+         */
         setIsOpen(false)
         reset()
-        
-        // Invalidate queries to refresh the folder contents
+
+        /**
+         * Invalidate queries to refresh the folder contents
+         */
         queryClient.invalidateQueries({ queryKey: ["contents", activeProjectId, activeFolderId] })
       }
     } catch (error) {
@@ -95,6 +104,11 @@ export function CreateFolder() {
     }
   }
 
+  /**
+   * The handleOpenChange handler is used to close the dropdown when the user clicks outside of it.
+   * 
+   * It also resets the form.
+   */
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open)
     if (!open) {
@@ -104,6 +118,9 @@ export function CreateFolder() {
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={handleOpenChange}>
+      {/**
+       * The dropdown menu trigger is the button that opens the dropdown.
+       */}
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -121,6 +138,9 @@ export function CreateFolder() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-80 p-4" align="end">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/**
+           * The folder name input and label.
+           */}
           <div className="space-y-2">
             <Label htmlFor="folderName" className="text-sm font-medium">
               Folder Name
@@ -140,7 +160,9 @@ export function CreateFolder() {
               <p className="text-sm text-destructive">{errors.name.message}</p>
             )}
           </div>
-          
+          {/**
+           * The cancel and create buttons.
+           */}
           <div className="flex justify-between">
             <Button
               type="button"

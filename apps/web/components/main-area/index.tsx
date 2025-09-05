@@ -22,6 +22,13 @@ import {
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog"
 
+/**
+ * The MainArea component is the main component that displays the file explorer.
+ * 
+ * It is responsible for displaying right data based on the view mode (list/grid)
+ * and search mode (current folder/all folders).
+ * 
+ */
 export function MainArea() {
   const { viewMode } = useToolbarStore();
   const { activeProjectId } = useProjectStore()
@@ -29,7 +36,9 @@ export function MainArea() {
   const { searchQuery, searchMode } = useToolbarStore()
   const queryClient = useQueryClient()
 
-  // State for delete confirmation dialogs
+  /**
+   * State for delete confirmation dialogs
+   */
   const [deleteDialog, setDeleteDialog] = useState<{
     isOpen: boolean
     type: 'file' | 'folder'
@@ -79,6 +88,11 @@ export function MainArea() {
     }
   }, [currentFolderContents, globalFiles, debouncedSearchQuery, searchMode])
 
+  /**
+   * On folder click, we add the folder to the history and set the active folder,
+   * which then updates the UI to display the new folder contents.
+   * 
+   */
   const handleFolderClick = (folderId: string) => {
     addToFolderHistory(folderId)
     setActiveFolderId(folderId)
@@ -108,19 +122,25 @@ export function MainArea() {
     try {
       if (deleteDialog.type === 'file') {
         await api.delete(`projects/${activeProjectId}/files/${deleteDialog.id}`)
-        // Invalidate relevant queries to refresh the UI
+        /**
+         * Invalidate relevant queries to refresh the UI
+         */
         queryClient.invalidateQueries({ queryKey: ["contents", activeProjectId, activeFolderId] })
         queryClient.invalidateQueries({ queryKey: ["global-files", activeProjectId] })
         console.log('File deleted successfully')
       } else {
         await api.delete(`projects/${activeProjectId}/folders/${deleteDialog.id}`)
-        // Invalidate relevant queries to refresh the UI
+        /**
+         * Invalidate relevant queries to refresh the UI
+         */
         queryClient.invalidateQueries({ queryKey: ["contents", activeProjectId, activeFolderId] })
         console.log('Folder deleted successfully')
       }
     } catch (error) {
       console.error(`Error deleting ${deleteDialog.type}:`, error)
-      // TODO: Add proper error handling/toast notification
+      /**
+       * TODO: Add some sort of toast notification
+       */
     } finally {
       setDeleteDialog({ isOpen: false, type: 'file', id: '', name: '' })
     }
@@ -143,7 +163,9 @@ export function MainArea() {
    */
   const currentIsLoading = searchMode === "all-folders" && isSearching ? isGlobalLoading : isLoading
 
-  // Common props for both components
+  /**
+   * Common props for both components
+   */
   const commonProps = {
     contents: searchMode === "all-folders" && isSearching ? { files: globalFiles || [], folders: [] } : currentFolderContents,
     isLoading: currentIsLoading,
