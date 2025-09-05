@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google"
+import type { Metadata } from "next"
 
 import "@workspace/ui/globals.css"
 import {
@@ -18,6 +19,11 @@ const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 })
+
+export const metadata: Metadata = {
+  title: "Codex | File Explorer",
+  description: "A modern file explorer built for the web.",
+}
 
 /**
  * This layout wraps every single page in the app. In our case,
